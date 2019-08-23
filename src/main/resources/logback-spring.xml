@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration>
+
+<!-- debug:当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false -->
+<configuration debug="false">
+    <!-- 应用名 -->
+    <contextName>bingjiandata</contextName>
+
+    <!-- 使用maven profile替换logHome -->
+    <property name="logHome" value="/User/i_lurenqiang/MonthReporter" scope="context" />
+
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+
+    <!-- 控制台日志 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern><![CDATA[
+				%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){yellow} [%clr(%thread){blue}] %-5level %clr(%logger){orange} --- %m%n
+            ]]></pattern>
+        </layout>
+    </appender>
+
+    <!-- INFO日志 -->
+    <appender name="INFO"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logHome}/%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger --- %m%n
+            </Pattern>
+        </encoder>
+    </appender>
+
+    <!-- 根配置 -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="INFO"/>
+    </root>
+</configuration>

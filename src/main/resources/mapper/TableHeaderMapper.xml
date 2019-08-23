@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.monthreporter.Dao.TableHeaderMapper" >
+
+    <select id="SelectTableHeader" resultType="com.example.monthreporter.Entity.TableHeader" >
+        SELECT datasource_type , interface_name FROM `datasource_config` GROUP BY datasource_type,interface_name
+    </select>
+
+    <select id="SelectData" resultType="com.example.monthreporter.Entity.Data" >
+        SELECT
+        t.project,
+        t.datasource_type,
+        t.interface_name,
+        count( t.id ) AS interfaceCount,
+        ROUND( d.cost / 10000, 2 ) cost
+        FROM
+        request_mapping_datasource t,
+        datasource_config d
+        WHERE
+        t.swift_no = t.datasource_swift_no
+        AND t.project IS NOT NULL
+        AND t.interface_name = d.interface_name
+        AND t.interface_name NOT IN ( '征信欺诈侦测', '征信评分', '反欺诈', '浦发反欺诈', '冰鉴黑名单', '冰鉴探真', '快速估值-单值', '快速估值-区间', '快速估值-残值' )
+        AND t.create_time <![CDATA[<=]]>'2019-08-21 00:00:00'
+        GROUP BY
+        t.project,
+        t.interface_name
+        ORDER BY
+        t.datasource_type ASC;
+    </select>
+</mapper>
